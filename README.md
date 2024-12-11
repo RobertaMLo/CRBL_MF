@@ -8,3 +8,5 @@ Lorenzi RM, Geminiani A, Zerlaut Y, De Grazia M, Destexhe A, et al. (2023) A mul
 
 DEMO_<folder_name> contain Jupyter notebook with examples ready to be run.
 Have fun!
+
+ONGOING EXTENTION: GABA and DOPAMINE modulation is under elaboration
