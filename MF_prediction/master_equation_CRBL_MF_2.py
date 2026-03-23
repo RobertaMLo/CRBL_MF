@@ -550,57 +550,30 @@ def plot_for_thesis_1vs2order(t, X1, X, F_mossy, font_size = 8, linew=1.5):
 
 if __name__=='__main__':
 
-    root_path = '/Users/robertalorenzi/PycharmProjects/bsb_ws/CRBL_MF_Model/'
-    #root_path = '/home/bcc/bsb-ws/CRBL_MF_Model/'
+    root_path = os.getcwd() +'/'
+    print(root_path)
+
     NRN1, NRN2, NRN3, NRN4 = 'GrC', 'GoC', 'MLI', 'PC'
 
     NTWK = 'CRBL_CONFIG_20PARALLEL_wN'#_redGoCGrC'
 
-    """
-    FILE_GrC = root_path + '20220525_163030_GrC_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha2.0_fit.npy'
-    #FILE_GrC = root_path + '20220531_115518_GrC_CRBL_CONFIG_20PARALLEL_wN_redGOCGRC_tsim5_alpha2.0_fit.npy'
-    FILE_GoC = root_path + '20220527_231641_GoC_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha1.5_fit.npy'
-    #FILE_GoC = '/home/bcc/bsb-ws/CRBL_MF_Model/_OLD_TF/20220519_155731_GoC_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha1.3_fit.npy'
-    FILE_MLI = root_path + '20220525_163203_MLI_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha1.5_fit.npy'
-    FILE_PC = root_path + '20220530_180801_PC_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha2.0_fit.npy'
-    """
-
     FILE_GrC = root_path  + '20220519_120033_GrC_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha2.0_fit.npy'
     FILE_GoC= root_path + '20220519_155731_GoC_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha1.3_fit.npy'
-    #FILE_MLI = root_path + '20220519_120011_MLI_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha1.6_fit.npy'
-    #FILE_PC = root_path + '20220519_120128_PC_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha1.9_fit.npy' #STANDARD CON PAUSA BELLA
-
-    #FILE_PC = root_path + '20220608_121728_PC_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha4.0_fit.npy'
-    #FILE_PC = '/home/bcc/bsb-ws/CRBL_MF_Model/20220608_121615_PC_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha4.0_fit.npy'
-    #FILE_PC =  root_path + '20220608_124413_PC_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha3.0_fit.npy'
-    #FILE_PC = root_path + 'numerical_network/20220619_155605_PC_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha2.0_fit.npy'
-
-    #FILE_PC = root_path + 'numerical_network/20220619_180012_PC_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha2.0_fit.npy'
-    #FILE_PC = '/Users/robertalorenzi/PycharmProjects/bsb_ws/CRBL_MF_Model/numerical_network/20220619_155605_PC_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha2.0_fit.npy'
 
     #Trial Ie*1.2 and alpha PREDICTION 5 for MLI and PC
     FILE_MLI = root_path + '20220622_085550_MLI_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha1.8_fit.npy'
-    #FILE_MLI = '/Users/robertalorenzi/PycharmProjects/bsb_ws/CRBL_MF_Model/20220628_194720_MLI_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha2.2_fit.npy'
-    #FILE_PC = '/Users/robertalorenzi/PycharmProjects/bsb_ws/CRBL_MF_Model/20220622_085610_PC_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha2.0_fit.npy'
     FILE_PC = root_path + '20220622_085610_PC_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha2.5_fit.npy'
-
-    #FILE_MLI = '/Users/robertalorenzi/PycharmProjects/bsb_ws/CRBL_MF_Model/20220622_171304_MLI_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha1.8_fit.npy'
-    #FILE_PC = '/Users/robertalorenzi/PycharmProjects/bsb_ws/CRBL_MF_Model/20220622_171355_PC_CRBL_CONFIG_20PARALLEL_wN_tsim5_alpha3.0_fit.npy'
 
     TFgrc = load_transfer_functions(NRN1, NTWK, FILE_GrC, alpha=2.0)
     TFgoc = load_transfer_functions_goc(NRN2, NTWK, FILE_GoC, alpha=1.3)
     TFmli = load_transfer_functions(NRN3, NTWK, FILE_MLI, alpha=5)
     TFpc = load_transfer_functions(NRN4, NTWK, FILE_PC, alpha=5) # !!!!!Cambiato per avere pc con giusto FR 4
 
-
     w = 0
-    #t = np.arange(5000) * 1e-4
+
     dt = 1e-4
-    #t = np.arange(0, 5+dt, dt)
+
     T = 3.5e-3
-
-    #t = np.arange(0, 1.5 + dt, dt)
-
 
     t = np.arange(0, 0.5, dt)
     f_backnoise = np.random.rand(len(t))*4 #* 4  # + np.ones(len(t))*50
@@ -620,7 +593,7 @@ if __name__=='__main__':
     f_tone2 = rect_input(time=t, t_start=6500, t_end=9000, minval=0, freq=50, noise_freq=0)
     f_tone3 = rect_input(time=t, t_start=9500, t_end=12000, minval=0, freq=50, noise_freq=0)
     fmossy = f_backnoise + f_tone1 + f_tone2 + f_tone3
->>>>>>> 6ac0cc9b1397f83bc78089029f90126a907d1bef
+
 
     # pulse period = quanti ne voglio, pulse_width = quanta larghi
     #QUANTI =  1600/500 = Length/pulse_period.
@@ -629,7 +602,6 @@ if __name__=='__main__':
 
     #fmossy = impulse_train_s500(time=t, pulse_period=500, pulse_width=200, pulse_max_freq=50, pulse_baseline=0,
     #                      noise_freq=4)  # 10 up 20 down
-
 
     # json file: background noise
     #Whisker stim
@@ -693,7 +665,7 @@ if __name__=='__main__':
     #                 'Second Order MF', 'MF2ORD_ALLPARALL_KNsyn')
 
     #SALVO COSI' PER PLOT!!!!!!!!!! mossy alla fineeeeeee
-    np.save(title_sim+'.npy', [X[:,0], X[:,1], X[:,9], X[:,10], X[:,8]])
+    np.save(title_sim+'prova_Mac.npy', [X[:,0], X[:,1], X[:,9], X[:,10], X[:,8]])
 
     #plot_for_thesis_1vs2order(t, X1, X, fmossy)
     #mytitle = 'CRBL MF - 2nd Order'
