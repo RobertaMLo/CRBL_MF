@@ -199,13 +199,18 @@ if __name__ == '__main__':
     #fmossy_A = np.random.rand(len(t)) * 100   # node A: 20 Hz background
     fmossy_B = np.random.rand(len(t)) * 4   # node B:  5 Hz background
 
+    fmossy_C = np.ones_like(fmossy_A)*fmossy_A*0.5  # node B:  5 Hz background
+
     # Initial condition set as in Lorenzi et al., 2023, Plos Comp Biol.
     CI = [0.5, 5, 15, 38]   # [GrC_0, GoC_0, MLI_0, PC_0]
 
-    # ---- Connectivity: A sends to B (unidirectional) ----------------------
+    # ---- Connectivity ----------------------
     # W_net[i, j] = weight of projection from node i to node j
-    N_nodes = 2
-    W_net = make_W_unidirectional(N_nodes, source=0, target=1, weight=1.0)
+    # mock example: B = vermis, receiving from hemisphere R and L (A and C)
+
+    N_nodes = 3
+    W_net = make_W_unidirectional(N_nodes, source=0, target=1, weight=1.0) + make_W_unidirectional(N_nodes, source=2, target=1, weight=1.0)
+
     print("Coupling matrix W_net:\n", W_net)
 
     # ---- Run network simulation -------------------------------------------
@@ -214,6 +219,8 @@ if __name__ == '__main__':
          'CI': CI, 'exc_aff': fmossy_A},
         {'TF1': TFgrc, 'TF2': TFgoc, 'TF3': TFmli, 'TF4': TFpc,
          'CI': CI, 'exc_aff': fmossy_B},
+        {'TF1': TFgrc, 'TF2': TFgoc, 'TF3': TFmli, 'TF4': TFpc,
+         'CI': CI, 'exc_aff': fmossy_C}
     ]
 
     X_all = find_fixed_point_network(nodes, W_net, t, w, T, verbose=True)
@@ -225,8 +232,9 @@ if __name__ == '__main__':
     colors = ['red', 'blue', 'orange', 'green']
 
     for k in range(4):
-        axes[k].plot(t, X_all[0][:, k], color=colors[k], label=f'Node A')
-        axes[k].plot(t, X_all[1][:, k], color=colors[k], linestyle='--', label=f'Node B')
+        axes[k].plot(t, X_all[0][:, k], color=colors[k], linestyle='--', label=f'Node A')
+        axes[k].plot(t, X_all[1][:, k], color=colors[k], label=f'Node B')
+        axes[k].plot(t, X_all[2][:, k], color=colors[k], linestyle=':', label=f'Node C')
 
         axes[k].set_ylabel(f'$\\nu_{{{labels[k]}}}$ [Hz]', fontsize=18)
         axes[k].tick_params(axis='y', labelsize=15)
