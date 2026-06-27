@@ -29,6 +29,52 @@ def get_neuron_params(NAME,  SI_units=True, name='', number=1):
                   'El': -59., 'Vthre': -43., 'Vreset': -69., 'delta_v': 3.5,
                   'kadap': 1.491, 'k2': 0.041, 'k1': 0.195, 'A2': 172.622, 'A1': 157.622, 'Ie': 742.54*1.2}
 
+    elif NAME == 'DCNi':
+        params = {
+            'name': name,
+            'N': number,
+            'Gl': 1.0,  # g_L: 1e-9 S → nS
+            'Cm': 56.0,  # C_m: 5.6e-11 F → pF
+            'Trefrac': 3.0,  # t_ref: 0.003 s → ms
+            'tm': 56.0,  # derivato: Cm/Gl
+            'El': -40.0,  # E_L: -0.04 V → mV
+            'Vthre': -39.0,  # V_th: -0.039 V → mV
+            'Vreset': -55.0,  # V_reset: -0.055 V → mV
+            'delta_v': 3.5,  # delta_V: 0.0035 V → mV
+            'kadap': 79.0,  # k_a: 7.9e-08 S → nS
+            'k2': 0.044,  # k_2: 44.0 s^-1 → ms^-1
+            'k1': 0.041,  # k_1: 41.0 s^-1 → ms^-1
+            'A2': 176.358,  # A_2: 1.76358e-10 A → pA
+            'A1': 176.358,  # A_1: 1.76358e-10 A → pA
+            'Ie': 2.384,  # I_e: 2.384e-12 A → pA
+            'Vspike': 20.0,  # V_spike: 0.02 V → mV
+            'tauV': 1.0,  # tau_V: 0.001 V → mV (parametro di pendenza dell'escape noise, non un tempo)
+            'lambda0': 0.0009  # lambda_0: 0.9 Hz → ms^-1 (kHz)
+        }
+
+    elif NAME == 'DCNp':
+        params = {
+            'name': name,
+            'N': number,
+            'Gl': 4.3,  # g_L: 4.3e-09 S → nS
+            'Cm': 142.0,  # C_m: 1.42e-10 F → pF
+            'Trefrac': 1.5,  # t_ref: 0.0015 s → ms
+            'tm': 33.023,  # derivato: Cm/Gl = 142/4.3
+            'El': -45.0,  # E_L: -0.045 V → mV
+            'Vthre': -36.0,  # V_th: -0.036 V → mV
+            'Vreset': -55.0,  # V_reset: -0.055 V → mV
+            'delta_v': 3.5,  # delta_V: 0.0035 V → mV
+            'kadap': 408.0,  # k_a: 4.08e-07 S → nS
+            'k2': 0.047,  # k_2: 47.0 s^-1 → ms^-1
+            'k1': 0.697,  # k_1: 697.0 s^-1 → ms^-1
+            'A2': 3.477,  # A_2: 3.477e-12 A → pA
+            'A1': 13.857,  # A_1: 1.3857e-11 A → pA
+            'Ie': 75.385,  # I_e: 7.5385e-11 A → pA
+            'Vspike': 20.0,  # V_spike: 0.02 V → mV
+            'tauV': 3.0,  # tau_V: 0.003 V → mV
+            'lambda0': 0.0035  # lambda_0: 3.5 Hz → ms^-1 (kHz)
+        }
+
 
 
     else:

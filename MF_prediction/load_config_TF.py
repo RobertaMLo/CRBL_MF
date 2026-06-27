@@ -5,7 +5,7 @@ from params_library.cell_library import get_neuron_params
 from params_library.syn_and_connec_library import get_connectivity_and_synapses_matrix
 from params_library.params_reformat import reformat_syn_parameters_eglif, pseq_eglif
 from MF_prediction.theoretical_tools import pseq_params, TF_my_template,\
-    pseq_params_eglif_goc,TF_my_template_goc
+    pseq_params_eglif_goc,TF_my_template_goc, TF_my_template_dcni, pseq_params_dcni
 
 
 def load_transfer_functions(CELL, NTWK, P_FILE, alpha):
@@ -29,6 +29,36 @@ def load_transfer_functions(CELL, NTWK, P_FILE, alpha):
 
         def TF(fe, fi, XX):
             return TF_my_template(fe, fi, XX, *pseq_params(params), alpha)
+
+    except IOError:
+        print('=======================================================')
+        print('===========  Fit is not available  ====================')
+        print('=======================================================')
+
+    return TF
+
+
+def load_transfer_functions_dcni(CELL, NTWK, P_FILE, alpha):
+    """
+    returns the transfer function of the mean field model
+    """
+
+    # NTWK
+    M = get_connectivity_and_synapses_matrix(NTWK, SI_units=True)
+
+    # CELL
+    params = get_neuron_params(CELL, SI_units=True)
+    reformat_syn_parameters_eglif(CELL, params, M)
+    print('..................... Loading TFs\nNeuron and Network: ', CELL, NTWK)
+    try:
+        P = np.load(P_FILE, allow_pickle=True)
+        print('Loaded P file: ', P_FILE)
+        print('\n')
+        params['P'] = P
+
+        def TF(fi, XX):
+            return TF_my_template_dcni(fi, XX, *pseq_params_dcni(params), alpha)
+        print(pseq_params_dcni(params))
 
     except IOError:
         print('=======================================================')

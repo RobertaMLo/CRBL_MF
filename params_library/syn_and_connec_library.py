@@ -819,6 +819,74 @@ def get_connectivity_and_synapses_matrix(NAME, SI_units=True, number=5):
         M[0, 3]['name'] = 'to_pc'
         M[0, 4]['name'] = 'to_mf'
 
+    elif NAME == 'wN_ALLPARALLEL_KNsyn':
+        # MLI AND PC: ALL PARAMS N-NORMALIZED, K PARALLEL TO OTHER POP * 0.2
+        # to mf -------------------------------------------------------
+        mf_mf = {'K': 0., 'Q': 0., 'Tsyn': 0., 'Erev': 0.}
+        grc_mf = {'K': 0., 'Q': 0., 'Tsyn': 0., 'Erev': 0.}
+        goc_mf = {'K': 0., 'Q': 0., 'Tsyn': 0., 'Erev': 0.}
+        mli_mf = {'K': 0., 'Q': 0., 'Tsyn': 0., 'Erev': 0.}
+        pc_mf = {'K': 0., 'Q': 0., 'Tsyn': 0., 'Erev': 0.}
+        # to grc -------------------------------------------------------
+        mf_grc = {'K': 4., 'Q': 0.23, 'Tsyn': 1.9, 'Erev': 0.}
+        grc_grc = {'K': 0., 'Q': 0., 'Tsyn': 0., 'Erev': 0.}
+        goc_grc = {'K': 3.5, 'Q': 0.240, 'Tsyn': 4.5, 'Erev': -80.}
+        mli_grc = {'K': 0., 'Q': 0., 'Tsyn': 0., 'Erev': 0.}
+        pc_grc = {'K': 0., 'Q': 0., 'Tsyn': 0., 'Erev': 0.}
+        # to goc Kgrc = Kp*factor + Ka ; Qgrc = (Qa*n_syn_a*Ka+Qp*n_syn_p*Kp*factor)/(Ka+Kp*factor)-------------------------------------------------------
+        mf_goc = {'K': 57.1, 'Q': 0.24, 'Tsyn': 5., 'Erev': 0.}
+        grc_goc = {'K': 1228.3, 'Q': 0.437, 'Tsyn': 1.25, 'Erev': 0.}
+        goc_goc = {'K': 2592.00, 'Q': 0.007, 'Tsyn': 5., 'Erev': -80.}
+        mli_goc = {'K': 0., 'Q': 0., 'Tsyn': 0., 'Erev': 0.}
+        pc_goc = {'K': 0., 'Q': 0., 'Tsyn': 0., 'Erev': 0.}
+        # to mli -----------------------------------------------------------------------
+        mf_mli = {'K': 0., 'Q': 0., 'Tsyn': 0., 'Erev': 0.}
+        grc_mli = {'K': 1219.8, 'Q': 0.154, 'Tsyn': 0.64, 'Erev': 0.}
+        goc_mli = {'K': 0., 'Q': 0., 'Tsyn': 0., 'Erev': 0.}
+        mli_mli = {'K': 1418.69, 'Q': 0.005, 'Tsyn': 2., 'Erev': -80.}
+        pc_mli = {'K': 0., 'Q': 0., 'Tsyn': 0., 'Erev': 0.}
+        # to pc -------------------------------------------------------------------------
+        mf_pc = {'K': 0., 'Q': 0., 'Tsyn': 0., 'Erev': 0.}
+        grc_pc = {'K': 1659.56, 'Q': 0.510, 'Tsyn': 1.1, 'Erev': 0.}
+        goc_pc = {'K': 0., 'Q': 0., 'Tsyn': 0., 'Erev': 0.}
+        mli_pc = {'K': 10.28, 'Q': 1.244, 'Tsyn': 2.8, 'Erev': -80.}
+        pc_pc = {'K': 0., 'Q': 0., 'Tsyn': 0., 'Erev': 0.}
+
+        # Riempio per colonna - leggo per colonna
+        M[:, 0] = [mf_grc.copy(), grc_grc.copy(), goc_grc.copy(), mli_grc.copy(), pc_grc.copy()]  # post-synaptic: grc
+        M[:, 1] = [mf_goc.copy(), grc_goc.copy(), goc_goc.copy(), mli_goc.copy(), pc_goc.copy()]  # post-synaptic: goc
+        M[:, 2] = [mf_mli.copy(), grc_mli.copy(), goc_mli.copy(), mli_mli.copy(), pc_mli.copy()]  # post-synaptic: mli
+        M[:, 3] = [mf_pc.copy(), grc_pc.copy(), goc_pc.copy(), mli_pc.copy(), pc_pc.copy()]  # post-synaptic: pc
+        M[:, 4] = [mf_mf.copy(), grc_mf.copy(), goc_mf.copy(), mli_mf.copy(), pc_mf.copy()]  # post-synaptic: mf
+
+        M[0, 0]['name'] = 'to_grc'
+        M[0, 1]['name'] = 'to_goc'
+        M[0, 2]['name'] = 'to_mli'
+        M[0, 3]['name'] = 'to_pc'
+        M[0, 4]['name'] = 'to_mf'
+
+    elif NAME == 'DCN_network':
+        M = np.empty((3,2), dtype=object)
+
+        # to dcni -----------------------------------------------------------------------
+        mf_dcni = {'K': 0., 'Q': 0., 'Tsyn': 0., 'Erev': 0.0}
+        grc_dcni = {'K': 0., 'Q': 0., 'Tsyn': 0., 'Erev': 0.0}
+        pc_dcni = {'K': 14, 'Q': 0.36, 'Tsyn': 1.14, 'Erev': -80.}
+
+        # to dcnp -------------------------------------------------------------------------
+        mf_dcnp = {'K': 48., 'Q': 0.35, 'Tsyn': 1., 'Erev': 0.}
+        grc_dcnp = {'K': 48., 'Q': 0.35, 'Tsyn': 1., 'Erev': 0.0}
+        pc_dcnp = {'K': 33, 'Q': 0.6, 'Tsyn': 0.7, 'Erev': -80.}
+
+        # Riempio per colonna - leggo per colonna
+        M[:, 0] = [mf_dcni.copy(), grc_dcni.copy(), pc_dcni.copy()]  # post-synaptic: dcni
+        M[:, 1] = [mf_dcnp.copy(), grc_dcnp.copy(), pc_dcnp.copy()]  # post-synaptic: dcnp
+
+        M[0, 0]['name'] = 'to_dcni'
+        M[0, 1]['name'] = 'to_dcnp'
+
+
+
     else:
         print('====================================================')
         print('------------ NETWORK NOT RECOGNIZED !! ---------------')

@@ -37,6 +37,24 @@ def reformat_syn_parameters_eglif(CELL, params, M):
         params['Ke'] = M[1, 2]['K']
         params['Ki'] = M[3, 2]['K']
 
+    elif CELL == 'DCNi':
+        # sinapsi to_DCN_inibitorio (solo mf eccitatoria, grc_dcni è nulla quindi non considerata)
+        params['Qe'], params['Te'], params['Ee'] = M[0, 0]['Q'], M[0, 0]['Tsyn'], M[0, 0]['Erev']
+        params['Ke'] = M[0, 0]['K']
+        params['Qi'], params['Ti'], params['Ei'] = M[2, 0]['Q'], M[2, 0]['Tsyn'], M[2, 0]['Erev']
+        params['Ki'] = M[2, 0]['K']
+
+    elif CELL == 'DCNp':
+        # sinapsi to_DCN_principale: due input eccitatori (mf e grc) + uno inibitorio (pc)
+        params['Qe_m'], params['Te_m'] = M[0, 1]['Q'], M[0, 1]['Tsyn']
+        params['Qe_g'], params['Te_g'] = M[1, 1]['Q'], M[1, 1]['Tsyn']
+        params['Ee'] = M[0, 1]['Erev']  # mf e grc sono entrambe eccitatorie
+        params['Qi'], params['Ti'], params['Ei'] = M[2, 1]['Q'], M[2, 1]['Tsyn'], M[2, 1]['Erev']
+        params['Ke_m'] = M[0, 1]['K']
+        params['Ke_g'] = M[1, 1]['K']
+        params['Ki'] = M[2, 1]['K']
+
+
 
 def pseq_eglif(cell_params):
     """ I'm the function to extract all parameters for the sim

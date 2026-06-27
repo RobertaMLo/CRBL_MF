@@ -15,6 +15,21 @@ def pseq_params(params):
            params['Cm'], params['El'], params['Ke'], params['Ki'], P[0], P[1], P[2], P[3], P[4]
 
 
+def pseq_params_dcni(params):
+
+    if 'P' in params.keys():
+        P = params['P']
+    else: # no correction
+        P = [-45e-3]
+        for i in range(1,11):
+            P.append(0)
+
+    print('SONO IN DCNI!!! Pvals', P)
+
+    return params['Qi'], params['Ti'], params['Ei'], params['Gl'], \
+           params['Cm'], params['El'], params['Ki'], P[0], P[1], P[2], P[3], P[4]
+
+
 def pseq_params_eglif_goc(params):
 
     Qe_g, Qe_m = params['Qe_g'], params['Qe_m']
@@ -74,6 +89,41 @@ def get_fluct_regime_varsup_eglif(Fe, Fi, XX,
 
     return muV, sV+1e-20, muGn, TvN
 
+def get_fluct_regime_varsup_eglif_dcni(Fi, XX,
+                                Qi, Ti, Ei, Gl, Cm, El, Ki, P0, P1, P2, P3, P4):
+
+    fi = Fi
+
+    # ---------------------------- Pop cond:  mu GrC and MLI ---------------------------------------
+    muGi = Qi * Ki * Ti * fi #EQUAL TO EXP
+    # ---------------------------- Input cond:  mu PC -----------------------------------------------
+    muG = Gl + muGi #EQUAL TO EXP
+    # ---------------------------- Membrane Fluctuation Properties ----------------------------------
+    muV = (np.e * (muGi * Ei + Gl * El) - XX) / muG  # XX = adaptation
+
+    muGn, Tm = muG / Gl, Cm / muG  # normalization
+
+    Ui = Qi / muG * (Ei - muV) #EQUAL TO EXP
+
+    #sVe= (2*Tm + Te) * (np.e * Ue *Te) ** 2 / (2* (Te + Tm)) **2 *Ke * fe
+    #sVi = (2*Tm + Ti) * (np.e * Ui *Ti) ** 2 / (2* (Ti + Tm)) **2 *Ki * fi
+
+    sVi = (2 * Tm + Ti) * ((np.e * Ui * Ti) / (2 * (Ti + Tm))) ** 2 * Ki * fi
+
+    sV = np.sqrt(np.abs(sVi))
+    #sV = np.sqrt(sVe + sVi)
+
+    fi = fi + 1e-9  # just to insure a non zero division
+
+    Tv_num= Ki * fi * Ui ** 2 * Ti ** 2 * np.e ** 2
+    Tv = 0.5 * Tv_num / ((sV+1e-20) ** 2)
+
+
+    TvN = Tv * Gl / Cm  # normalization
+
+    return muV, sV+1e-20, muGn, TvN
+
+
 def get_fluct_regime_varsup_eglif_goc(Fe_m, Fe_g, Fi, XX,
                                   Qe_g, Qe_m, Te_g, Te_m, Ee, Qi, Ti, Ei, Gl, Cm, El, Ke_g, Ke_m, Ki,
                                  P0, P1, P2, P3, P4):
@@ -128,6 +178,7 @@ def mean_and_var_conductance_goc(fe_m, fe_g, fi, Qe_g, Qe_m, Te_g, Te_m, Ee, Qi,
                            Qi * np.sqrt(Ti * fi * Ki / 2.)
     return muGe_g,muGe_m, muGi, svGe_g, svGe_m
 
+
 #TF semi-analytic expression
 def erfc_func(muV, sV, TvN, Vthre, Gl, Cm, alpha):
     return .5/TvN * Gl/Cm * (sp_spec.erfc( (Vthre-muV)/np.sqrt(2)/sV)) * alpha
@@ -136,6 +187,7 @@ def erfc_func(muV, sV, TvN, Vthre, Gl, Cm, alpha):
 def effective_Vthre(Y, muV, sV, TvN, Gl, Cm, alpha):
     Vthre_eff = muV + np.sqrt(2) * sV * sp_spec.erfcinv( (1/alpha) * (Y*2*TvN*Cm/Gl) ) # effective threshold
     return Vthre_eff
+
 
 #Veff_thre as polynomial expression
 def threshold_func(muV, sV, TvN, muGn, P0, P1, P2, P3, P4):
@@ -151,6 +203,14 @@ def TF_my_template(fe, fi, XX, Qe, Te, Ee, Qi, Ti, Ei, Gl, Cm, El, Ke, Ki, P0, P
     muV, sV, muGn, TvN = get_fluct_regime_varsup_eglif(fe, fi, XX, Qe, Te, Ee, Qi, Ti, Ei, Gl, Cm, El, Ke, Ki,
                                                        P0, P1, P2, P3, P4)
 
+    Vthre = threshold_func(muV, sV, TvN, muGn, P0, P1, P2, P3, P4)
+    Fout_th = erfc_func(muV, sV, TvN, Vthre, Gl, Cm, alpha)
+    return Fout_th
+
+def TF_my_template_dcni(fi, XX, Qi, Ti, Ei, Gl, Cm, El, Ki, P0, P1, P2, P3, P4, alpha):
+
+    muV, sV, muGn, TvN = get_fluct_regime_varsup_eglif_dcni(fi, XX, Qi, Ti, Ei, Gl, Cm, El, Ki,
+                                                       P0, P1, P2, P3, P4)
     Vthre = threshold_func(muV, sV, TvN, muGn, P0, P1, P2, P3, P4)
     Fout_th = erfc_func(muV, sV, TvN, Vthre, Gl, Cm, alpha)
     return Fout_th
